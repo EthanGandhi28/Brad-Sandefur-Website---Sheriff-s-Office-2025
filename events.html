@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Events | Candidate for Sheriff</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Brad Sandefur for Sheriff | Events</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="donate.html">Donate</a></li>
+                <li><a href="volunteer.html">Volunteer</a></li>
+                <li><a href="mental-health.html">Mental Health</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="calendar" id="calendar"></div>
+    </main>
+
+    <script>
+        const events = {
+            "2025-08-10": "Meet and Greet – Downtown",
+            "2025-08-15": "Town Hall – Community Center",
+            "2025-08-22": "Fundraising Dinner – Riverside Inn",
+        };
+
+        function generateCalendar(month, year) {
+            const calendar = document.getElementById("calendar");
+            calendar.innerHTML = "";
+
+            const date = new Date(year, month);
+            const monthName = date.toLocaleString("default", { month: "long" });
+            const yearNum = date.getFullYear();
+
+            const title = document.createElement("h2");
+            title.textContent = `${monthName} ${yearNum}`;
+            calendar.appendChild(title);
+
+            const table = document.createElement("table");
+            const headerRow = document.createElement("tr");
+            ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].forEach(day => {
+                const th = document.createElement("th");
+                th.textContent = day;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            let row = document.createElement("tr");
+            for (let i = 0; i < firstDay; i++) {
+                row.appendChild(document.createElement("td"));
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                if (row.children.length === 7) {
+                    table.appendChild(row);
+                    row = document.createElement("tr");
+                }
+
+                const cell = document.createElement("td");
+                const currentDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                cell.textContent = day;
+
+                if (events[currentDate]) {
+                    const eventDiv = document.createElement("div");
+                    eventDiv.className = "event";
+                    eventDiv.textContent = events[currentDate];
+                    cell.appendChild(eventDiv);
+                    cell.classList.add("has-event");
+                }
+
+                row.appendChild(cell);
+            }
+
+            if (row.children.length > 0) {
+                while (row.children.length < 7) {
+                    row.appendChild(document.createElement("td"));
+                }
+                table.appendChild(row);
+            }
+
+            calendar.appendChild(table);
+        }
+
+        const today = new Date();
+        generateCalendar(today.getMonth(), today.getFullYear());
+    </script>
+</body>
+</html>
+
+
+
